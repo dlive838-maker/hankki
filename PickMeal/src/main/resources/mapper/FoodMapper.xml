@@ -55,4 +55,15 @@
         FROM food
         WHERE foodName = #{name}
     </select>
+
+    <select id="getRandomFoodByCategory" resultMap="FoodResultMap">
+        SELECT * FROM food
+        <where>
+            <if test="category != null and category != '전체'">
+                AND category = #{category}
+            </if>
+        </where>
+        ORDER BY RAND()
+        LIMIT 1
+    </select>
 </mapper>

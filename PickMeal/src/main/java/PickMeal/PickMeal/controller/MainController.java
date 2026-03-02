@@ -1,15 +1,14 @@
 package PickMeal.PickMeal.controller;
 
-import PickMeal.PickMeal.domain.Admin;
 import PickMeal.PickMeal.domain.Food;
 import PickMeal.PickMeal.domain.Game;
 import PickMeal.PickMeal.domain.User;
-import PickMeal.PickMeal.mapper.AdminMapper;
 import PickMeal.PickMeal.service.FoodService;
 import PickMeal.PickMeal.service.GameService;
 import PickMeal.PickMeal.service.ReviewService;
 import PickMeal.PickMeal.service.UserService;
 import PickMeal.PickMeal.service.RestaurantService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class MainController {
@@ -41,9 +41,6 @@ public class MainController {
 
     @Autowired
     private GameService gameService;
-
-    @Autowired
-    private AdminMapper adminMapper;
 
     @GetMapping("/")
     public String index() {
@@ -163,65 +160,50 @@ public class MainController {
                                  @RequestParam(value="gameType", defaultValue="worldcup") String gameType,
                                  Authentication authentication) {
         try {
-            // 1. 기존 전체 카운트 증가
+            // 1. 음식 전체 승리 카운트 증가
             userService.updateFoodWinCount(foodId);
 
-            // 2. game 객체 생성 및 초기화
+            // 2. Game 객체 생성 및 기본 정보 설정
             Game game = new Game();
-            game.setUser_id(null);
-            game.setAdmin_id(null);
             game.setFood_id(foodId);
             game.setGameType(gameType);
             game.setPlayDate(LocalDateTime.now());
+            game.setUser_id(null); // 기본값은 비로그인(null)
 
-            // 3. 로그인 사용자 정보 처리
+            // 3. 로그인 사용자 정보 처리 (통합 버전)
             if (authentication != null && authentication.isAuthenticated()) {
+                // 시큐리티에서 현재 로그인한 ID 추출
                 String loginName = authentication.getName();
-                boolean isAdmin = authentication.getAuthorities().stream()
-                        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
-                if (isAdmin) {
-                    // 관리자 로직
-                    Admin admin = adminMapper.findByLoginId(loginName);
-                    if (admin != null) {
-                        game.setAdmin_id(admin.getAdminId());
-                    }
-                } else {
-                    // 일반 유저 로직
-                    String registrationId = "";
-                    if (authentication instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
-                        registrationId = token.getAuthorizedClientRegistrationId();
-                    }
-
-                    String fullUserId = (registrationId == null || registrationId.isEmpty() || loginName.startsWith(registrationId))
-                            ? loginName : registrationId + "_" + loginName;
-
-                    System.out.println("검색하려는 ID: " + fullUserId);
-                    User user = userService.findById(fullUserId);
-
-                    if (user != null) {
-                        System.out.println("유저 찾기 성공! PK: " + user.getUser_id());
-                        game.setUser_id(user.getUser_id());
-                    } else {
-                        System.out.println("유저 찾기 실패... DB를 확인하세요.");
-                    }
+                // 소셜 로그인 여부 확인 및 ID 조합 (기존 UserService 로직 활용)
+                String registrationId = "";
+                if (authentication instanceof org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken token) {
+                    registrationId = token.getAuthorizedClientRegistrationId();
                 }
-            } // <--- authentication 체크 블록 끝
 
-            // [중요] 0 방어 로직 (항상 실행되도록 블록 밖으로 뺌)
-            if (game.getUser_id() != null && game.getUser_id() == 0L) {
-                game.setUser_id(null);
+                // 통합된 ID 규칙 적용 (일반/관리자는 loginName 그대로, 소셜은 prefix_loginName)
+                String fullUserId = (registrationId == null || registrationId.isEmpty() || loginName.startsWith(registrationId))
+                        ? loginName : registrationId + "_" + loginName;
+
+                // 통합된 user 테이블에서 사용자 조회
+                User user = userService.findById(fullUserId);
+
+                if (user != null) {
+                    // 관리자든 일반 유저든 찾은 User 객체의 ID를 game의 user_id에 저장
+                    game.setUser_id(user.getUser_id());
+                    System.out.println("게임 기록 저장 대상 ID: " + user.getUser_id() + " (권한: " + user.getRole() + ")");
+                }
             }
 
-            // [핵심] 로그인 여부와 상관없이 게임 기록 저장 시도
+            // 4. 게임 기록 저장 (로그인 여부와 상관없이 실행)
             gameService.insertGameRecord(game);
             return "success";
 
-        } catch (Exception e) { // <--- try 블록 끝 및 catch 시작
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("월드컵 기록 저장 중 에러 발생: ", e);
             return "fail";
         }
-    } // <--- 메서드 끝
+    }
 
     @GetMapping("/api/food/getIdByName")
     @ResponseBody

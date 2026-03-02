@@ -2,7 +2,6 @@ package PickMeal.PickMeal.service;
 
 import PickMeal.PickMeal.domain.Food;
 import PickMeal.PickMeal.domain.User;
-import PickMeal.PickMeal.mapper.AdminMapper;
 import PickMeal.PickMeal.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -21,7 +20,6 @@ import java.util.List;
 @Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션 적용
 public class UserService implements UserDetailsService {
     private final UserMapper userMapper;
-    private final AdminMapper adminMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional // 쓰기 작업이므로 트랜잭션 별도 지정
@@ -63,9 +61,11 @@ public class UserService implements UserDetailsService {
         userMapper.save(user); // DB 저장
     }
 
-    // 아이디 중복체크
     public boolean isIdDuplicate(String id) {
-        return userMapper.findById(id) != null; // 존재 여부 반환
+        // 1. 유저 테이블에서 아이디 존재 여부 확인
+        boolean existsInUser = userMapper.findById(id) != null;
+
+        return existsInUser;
     }
 
     /**
@@ -87,31 +87,18 @@ public class UserService implements UserDetailsService {
         return userMapper.findByEmail(email);
     }
 
-    // UserService.java 수정
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-
-        // 1. 관리자 테이블 확인
-        PickMeal.PickMeal.domain.Admin admin = adminMapper.findByLoginId(loginId);
-
-        if (admin != null) {
-            // [중요] .username()은 식별자이므로 loginId를 유지하되,
-            // 관리자의 실제 이름(name)을 활용할 수 있도록 세팅이 필요합니다.
-            return org.springframework.security.core.userdetails.User.builder()
-                    .username(admin.getName())
-                    .password(admin.getPassword())
-                    .roles("ADMIN")
-                    .build();
-        }
-
-        // 2. 일반 유저 테이블 확인
         User user = userMapper.findById(loginId);
-        if (user != null) {
-            // 일반 유저도 이름으로 나오게 하고 싶다면 여기서 user.getName() 등으로 처리 가능합니다.
-            return user;
-        }
+        if (user == null) throw new UsernameNotFoundException("사용자 없음");
 
-        throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
+        String roleName = user.getRole().replace("ROLE_", "");
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getId())
+                .password(user.getPassword())
+                .roles(roleName)
+                .build();
     }
 
     private void validateDuplicateUser(String id) {
@@ -192,10 +179,9 @@ public class UserService implements UserDetailsService {
         userMapper.updateWinCount(foodId);
     }
 
-    public String findByUser_id(Long user_id) {
+    public User findByUser_id(Long user_id) {
         return userMapper.findByUser_id(user_id);
     }
-
     /**
      * 이메일 즉시 변경
      */
@@ -246,25 +232,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User getAuthenticatedUser(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
-        }
+        if (authentication == null || !authentication.isAuthenticated()) return null;
 
-        // 1. 기본 식별값(ID) 가져오기
+        // 테이블이 하나이므로 principalName(ID)으로 바로 findById 호출
         String principalName = authentication.getName();
 
-        // 2. 소셜 로그인인 경우 registrationId(kakao, naver 등) 추출
-        String registrationId = "";
-        if (authentication instanceof OAuth2AuthenticationToken token) {
-            registrationId = token.getAuthorizedClientRegistrationId();
-        }
-
-        // 3. DB 저장 형식에 맞게 ID 재조합 (일반: id, 소셜: kakao_id)
-        String fullUserId = registrationId.isEmpty() ? principalName : registrationId + "_" + principalName;
-
-        // 4. 재조합된 ID로 DB에서 유저 조회
-        return findById(fullUserId);
+        // 소셜 로그인 ID 조합 로직이 있다면 그대로 유지하되,
+        // 일반/관리자 로그인은 그냥 principalName이 ID가 됩니다.
+        return findById(principalName);
     }
-
 
 }

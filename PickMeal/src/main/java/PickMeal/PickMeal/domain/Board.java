@@ -17,4 +17,5 @@ public class Board {
     private long viewCount;
     private long commentCount;
     private String nickname;
+    private String is_notice;
 }

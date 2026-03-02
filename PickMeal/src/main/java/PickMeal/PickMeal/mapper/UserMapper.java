@@ -43,7 +43,7 @@ public interface UserMapper {
 
     void updateWinCount(Long id);
 
-    String findByUser_id(Long userId);
+    User findByUser_id(Long userId);
 
     /**
      * 이름과 이메일로 아이디 조회 (아이디 찾기용)

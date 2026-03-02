@@ -90,8 +90,9 @@
         WHERE foodId = #{foodId}
     </update>
 
-    <select id="findByUser_id" resultType="String">
-        SELECT nickname FROM user WHERE user_id = #{user_id}
+    <select id="findByUser_id" resultType="PickMeal.PickMeal.domain.User">
+        SELECT * FROM user
+        WHERE user_id = #{userId}
     </select>
 
     <select id="findUserByNameAndEmail" resultType="PickMeal.PickMeal.domain.User">
