@@ -16,7 +16,13 @@
     </insert>
 
     <select id="findById" resultType="PickMeal.PickMeal.domain.User">
-        SELECT * FROM user WHERE id = #{id}
+        SELECT
+        user_id AS user_id,  id,
+        nickname,
+        likeMenu,
+        disLikeMenu
+        FROM user
+        WHERE id = #{id}
     </select>
 
     <select id="findByEmail" resultType="PickMeal.PickMeal.domain.User">

@@ -189,6 +189,7 @@ public class MainController {
                 User user = userService.findById(fullUserId);
                 if (user != null) {
                     game.setUser_id(user.getUser_id()); // Long 타입 PK 저장
+                    System.out.println("로그인 유저의 실제 PK: " + user.getUser_id());
                 }
             }
 
