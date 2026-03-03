@@ -52,19 +52,21 @@ public class PlaceStatsService {
         }, params);
     }
 
-    // 2. 특정 가게의 모든 댓글 목록 조회
-    // 2. 특정 가게의 모든 댓글 목록 조회
     public List<PlaceStatsDto> getReviews(String kakaoPlaceId) {
         Long resId = Long.parseLong(kakaoPlaceId);
         // [수정] SQL문에 rating 컬럼을 추가해야 합니다.
-        String sql = "SELECT review_id, user_id, content, rating FROM place_stats " +
-                "WHERE res_id = ? AND content IS NOT NULL " +
-                "ORDER BY created_at DESC";
+        String sql = "SELECT p.review_id, p.user_id, u.nickname, p.content, p.rating " +
+                "FROM place_stats p " +
+                "LEFT JOIN user u ON p.user_id = u.id " + // 사용자 테이블 JOIN
+                "WHERE p.res_id = ? AND p.content IS NOT NULL " +
+                "ORDER BY p.created_at DESC";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             PlaceStatsDto dto = new PlaceStatsDto();
             dto.setReviewId(rs.getLong("review_id"));
             dto.setUserId(rs.getString("user_id"));
+            String nickname = rs.getString("nickname");
+            dto.setNickname(nickname != null ? nickname : rs.getString("user_id"));
             dto.setContent(rs.getString("content"));
             // [추가] DB에서 가져온 rating 값을 DTO에 담아줘야 프론트에서 읽을 수 있습니다.
             dto.setRating(rs.getInt("rating"));
@@ -109,10 +111,9 @@ public class PlaceStatsService {
     // 5. 신규 댓글 추가 (평점 포함)
     public void addReview(String kakaoPlaceId, String userId, String content, int rating, String placeName) {
         Long resId = Long.parseLong(kakaoPlaceId);
-        String sql = "INSERT INTO place_stats (res_id, user_id, content, rating, place_name, created_at, updated_at) " +
-                "VALUES (?, ?, ?, ?, ?, NOW(), NOW())";
-        jdbcTemplate.update(sql, resId, userId, content, rating, placeName);
-        updateReviewCount(resId);
+        String sql = "INSERT INTO place_stats (res_id, user_id, content, rating, category, address, place_name, created_at, updated_at ) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+        jdbcTemplate.update(sql, resId, userId, content, rating, "GENERAL", "서울시 관악구", "한국정보교육원");
     }
 
     // 6. 댓글 수정
@@ -122,7 +123,7 @@ public class PlaceStatsService {
 
         String updateSql = "UPDATE place_stats SET content = ?, updated_at = NOW() WHERE review_id = ?";
         jdbcTemplate.update(updateSql, content, reviewId);
-        updateReviewCount(resId);
+
     }
 
     // 7. 댓글 삭제
@@ -132,7 +133,7 @@ public class PlaceStatsService {
 
         String deleteSql = "DELETE FROM place_stats WHERE review_id = ?";
         jdbcTemplate.update(deleteSql, reviewId);
-        updateReviewCount(resId);
+
     }
 
     // 8. 댓글 수 동기화
@@ -161,7 +162,7 @@ public class PlaceStatsService {
         // 3. 해당 가게의 평균 평점 및 댓글 수 동기화
         String findResIdSql = "SELECT res_id FROM place_stats WHERE review_id = ?";
         Long resId = jdbcTemplate.queryForObject(findResIdSql, Long.class, reviewId);
-        updateReviewCount(resId);
+
 
         return true;
     }

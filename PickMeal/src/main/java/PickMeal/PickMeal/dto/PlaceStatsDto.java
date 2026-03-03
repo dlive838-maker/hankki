@@ -21,4 +21,5 @@ public class PlaceStatsDto {
     private String placeName;
     private String address;
     private String category;
+    private String nickname;
 }

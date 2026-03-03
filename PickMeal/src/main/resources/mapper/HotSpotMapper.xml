@@ -4,7 +4,7 @@
 <mapper namespace="PickMeal.PickMeal.mapper.HotSpotMapper">
     <insert id="addHotspot" parameterType="long">
         INSERT INTO hot_spot (res_id)
-        VALUES (#{res_id})
+        VALUES (#{resId})
     </insert>
     <delete id="deleteHotspot" parameterType="long">
             DELETE FROM hot_spot
