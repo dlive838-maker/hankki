@@ -70,11 +70,15 @@
     </select>
 
     <select id="getWinnerFoodList" resultType="PickMeal.PickMeal.domain.Food">
-            SELECT foodId, foodName, category, imagePath, winCount
-            FROM food
-            WHERE winCount > 0
-            ORDER BY winCount DESC
-            LIMIT 10
+        SELECT
+        f.foodId,
+        f.foodName,
+        f.category,
+        f.imagePath,
+        COUNT(g.gameId) as winCount  FROM food f
+        JOIN game g ON f.foodId = g.food_id  WHERE DATE_FORMAT(g.playDate, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') GROUP BY f.foodId, f.foodName, f.category, f.imagePath
+        ORDER BY winCount DESC
+        LIMIT 10
     </select>
 
 </mapper>
