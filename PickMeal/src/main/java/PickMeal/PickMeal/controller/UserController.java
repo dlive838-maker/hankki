@@ -5,24 +5,18 @@ import PickMeal.PickMeal.domain.User;
 import PickMeal.PickMeal.dto.PlaceStatsDto;
 import PickMeal.PickMeal.service.BoardService;
 import PickMeal.PickMeal.service.RestaurantService;
-import PickMeal.PickMeal.service.UserPasswordService;
 import PickMeal.PickMeal.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,11 +73,6 @@ public class UserController {
 
         return authentication.getName(); // 일반 로그인
     }
-
-    public String getLoginUserIdForBoard(Authentication authentication) {
-        return getLoginUserId(authentication);
-    }
-
 
     @GetMapping("/signup")
     public String signupForm(Model model) {

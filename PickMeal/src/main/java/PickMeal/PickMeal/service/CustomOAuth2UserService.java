@@ -1,7 +1,6 @@
 package PickMeal.PickMeal.service;
 
 import PickMeal.PickMeal.domain.User;
-import PickMeal.PickMeal.domain.oauth.OAuth2Attributes;
 import PickMeal.PickMeal.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,7 +11,6 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
