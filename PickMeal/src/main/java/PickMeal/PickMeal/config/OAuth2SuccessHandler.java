@@ -46,16 +46,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if (findUser != null) {
             getRedirectStrategy().sendRedirect(request, response, "/next-page");
         } else {
-            // 2. 신규 회원: 가입 페이지로 이동
             String pureSocialId = userId.replace(registrationId + "_", "");
 
-            // [중요 수정] 이제 제공자마다 다르게 꺼내던 복잡한 로직 대신,
-            // 서비스에서 담아준 정제된 변수들을 그대로 queryParam에 넣습니다.
             String targetUrl = UriComponentsBuilder.fromUriString("/users/signup/social")
                     .queryParam("socialId", pureSocialId)
                     .queryParam("email", (email != null) ? email : "")
                     .queryParam("site", registrationId)
-                    .queryParam("name", (nickname != null) ? nickname : "") // 컨트롤러가 name으로 받고 있으니 name으로 전달
+                    .queryParam("name", (nickname != null) ? nickname : "")
+                    .queryParam("isSocial", true) // 추가: 가입 폼에서 소셜 유저임을 명확히 인지하도록
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();

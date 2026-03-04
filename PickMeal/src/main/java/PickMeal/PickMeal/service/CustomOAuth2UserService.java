@@ -63,14 +63,20 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException(new OAuth2Error("withdrawn_user"), "탈퇴 회원");
         }
 
-        // 4. 세션 설정을 위한 Map 구성 (email과 nickname 추가)
+        // 4. 권한 부여 로직 분리 (중요!)
+        // DB에서 조회한 user 객체가 null이면 아직 회원가입 전이므로 GUEST 권한을 부여합니다.
+        String role = (user != null) ? "ROLE_USER" : "ROLE_GUEST";
+
+        System.out.println(">>> [권한 부여 체크] ID: " + finalId + " / ROLE: " + role);
+
+        // 5. 세션 설정을 위한 Map 구성
         Map<String, Object> customMap = new HashMap<>(originAttributes);
         customMap.put("db_id", finalId);
         customMap.put("email", email);
         customMap.put("nickname", nickname);
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                Collections.singleton(new SimpleGrantedAuthority(role)), // 동적 권한 주입
                 customMap,
                 "db_id"
         );
