@@ -75,20 +75,6 @@ public class BoardService {
         boardMapper.editBoard(board);
     }
 
-    public List<String> extractImageUrlFromContent(String content) {
-        if(content == null || content.isEmpty()) return new ArrayList<>();
-
-        Document doc = Jsoup.parse(content);
-        Elements elements = doc.getElementsByTag("img");
-
-        List<String> imageUrls = new ArrayList<>();
-        for (Element element : elements){
-            imageUrls.add(element.attr("src"));
-        }
-
-        return imageUrls;
-    }
-
     public void updateViewCount(long boardId) {
         boardMapper.updateViewCount(boardId);
     }

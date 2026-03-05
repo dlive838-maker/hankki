@@ -37,9 +37,6 @@ public class MainController {
     private UserService userService;
 
     @Autowired
-    private RestaurantService restaurantService; // 추가
-
-    @Autowired
     private FoodService foodService;
 
     @Autowired

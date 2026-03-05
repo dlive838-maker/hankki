@@ -198,10 +198,6 @@ public class UserService implements UserDetailsService {
         userMapper.updateStatus(user_id, "WITHDRAWN"); // 탈퇴 시 상태값만 변경
     }
 
-    public boolean isWithdrawn(User user) {
-        return user != null && "WITHDRAWN".equals(user.getStatus());
-    }
-
     public List<Food> getMixedFoods(List<String> types, int round) {
         return userMapper.getMixedFoods(types, round);
     }
@@ -262,11 +258,6 @@ public class UserService implements UserDetailsService {
         String stars = "*".repeat(fullId.length() - 3);
 
         return prefix + stars;
-    }
-
-    // 비밀번호 재설정 대상 확인
-    public User checkUserForPasswordReset(String id, String email) {
-        return userMapper.findUserByIdAndEmail(id, email);
     }
 
     public User getAuthenticatedUser(Authentication authentication) {

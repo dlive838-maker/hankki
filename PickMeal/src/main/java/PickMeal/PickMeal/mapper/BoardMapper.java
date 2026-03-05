@@ -20,8 +20,6 @@ public interface BoardMapper {
 
     void removeBoard(long boardId);
 
-    List<Long> getBoardIdByUser_id(long userId);
-
     Board getBoardByBoardId(long boardId);
 
     void editBoard(Board board);
