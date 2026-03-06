@@ -22,8 +22,6 @@ public class CustomErrorController implements ErrorController {
             statusCode = statusParam;
         }
 
-        System.out.println("진입한 에러 코드: " + statusCode);
-
         if (statusCode == 403) {
             return "error/403";
         } else if (statusCode == 404) {
