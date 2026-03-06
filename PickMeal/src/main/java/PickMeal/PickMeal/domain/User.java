@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -32,12 +33,10 @@ public class User implements UserDetails { // 시큐리티 연동을 위해 User
     private String disLikeMenu; // 싫어하는 음식
     private Date joinDate; // 가입일
     private String role; // 권한 (ROLE_USER 등)
-    private String status; // 상태 (ACTIVE, WITHDRAWN)
+    private String status; // 상태 (ACTIVE, WITHDRAWN, SUSPENDED)
+    private LocalDateTime suspensionEndDate;
     private String socialLoginSite; // 소셜 사이트 이름
     private String socialId; // 소셜 고유 식별값
-
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

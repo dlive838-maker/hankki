@@ -27,7 +27,11 @@ public interface UserMapper {
 
     void updatePassword(@Param("userId") Long userId, @Param("newPassword") String newPassword);
 
-    void updateStatus(@Param("user_id") Long user_id, @Param("status") String status);
+    void updateUserSuspension(User user);
+
+    void releaseExpiredSuspensions();
+
+    void updateWithdrawal(User user);
 
     int countByNickname(String nickname);
 

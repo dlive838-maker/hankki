@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service // 서비스 빈 등록
@@ -193,9 +194,24 @@ public class UserService implements UserDetailsService {
         userMapper.edit(user);
     }
 
+    // 기존 remove 메서드를 이걸로 교체하세요!
     @Transactional
     public void remove(Long user_id) {
-        userMapper.updateStatus(user_id, "WITHDRAWN"); // 탈퇴 시 상태값만 변경
+        // 1. 탈퇴할 유저 정보를 가져옵니다.
+        User user = userMapper.findByUser_id(user_id);
+
+        if (user != null) {
+            // 2. 재가입 시 중복을 피하기 위해 값 뒤에 "_W_고유번호"를 붙여 익명화 처리
+            // (예: 원래 아이디가 'test1'이고 PK가 15라면 -> 'test1_W_15'로 변경)
+            String suffix = "_W_" + user.getUser_id();
+
+            user.setId(user.getId() + suffix);
+            user.setEmail(user.getEmail() + suffix);
+            user.setNickname(user.getNickname() + suffix);
+
+            // 3. 상태값을 WITHDRAWN으로 바꿔서 매퍼로 넘김
+            userMapper.updateWithdrawal(user);
+        }
     }
 
     public List<Food> getMixedFoods(List<String> types, int round) {
@@ -286,5 +302,20 @@ public class UserService implements UserDetailsService {
             System.out.println(">>> [findById 에러 발생] : " + e.getMessage());
             return null;
         }
+    }
+
+    @Transactional
+    public void suspendUser(Long userId, int suspendDays) {
+        User user = userMapper.findByUser_id(userId);
+
+        // 1. 현재 시간에서 정지 일수만큼 더해서 '해제 날짜' 계산
+        LocalDateTime endDate = LocalDateTime.now().plusDays(suspendDays);
+
+        // 2. 상태를 SUSPENDED로 바꾸고 날짜 세팅
+        user.setStatus("SUSPENDED");
+        user.setSuspensionEndDate(endDate);
+
+        // 3. DB 업데이트 (Mapper에는 해당 정보를 업데이트하는 쿼리 필요)
+        userMapper.updateUserSuspension(user);
     }
 }

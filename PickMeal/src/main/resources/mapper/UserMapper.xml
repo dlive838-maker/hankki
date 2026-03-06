@@ -72,12 +72,6 @@
         WHERE user_id = #{user_id}
     </update>
 
-    <update id="updateStatus">
-        UPDATE user
-        SET status = #{status}
-        WHERE user_id = #{user_id}
-    </update>
-
     <select id="getMixedFoods" resultType="PickMeal.PickMeal.domain.Food">
         SELECT * FROM food
         WHERE category IN
@@ -136,4 +130,27 @@
     <select id="getDislikedMenuString" resultType="String">
         SELECT disLikeMenu FROM user WHERE user_id = #{userId}
     </select>
+    <update id="updateWithdrawal" parameterType="PickMeal.PickMeal.domain.User">
+        UPDATE user
+        SET status = 'WITHDRAWN',
+        id = #{id},
+        email = #{email},
+        nickname = #{nickname}
+        WHERE user_id = #{user_id}
+    </update>
+    <update id="updateUserSuspension" parameterType="PickMeal.PickMeal.domain.User">
+        UPDATE user
+        SET status = #{status},
+        suspension_end_date = #{suspensionEndDate}
+        WHERE user_id = #{user_id}
+    </update>
+    <update id="releaseExpiredSuspensions">
+        <![CDATA[
+        UPDATE user
+        SET status = 'ACTIVE',
+            suspension_end_date = NULL
+        WHERE status = 'SUSPENDED'
+          AND suspension_end_date <= NOW()
+        ]]>
+    </update>
 </mapper>
