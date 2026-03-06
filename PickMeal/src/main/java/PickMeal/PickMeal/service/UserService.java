@@ -114,16 +114,29 @@ public class UserService implements UserDetailsService {
         User user = userMapper.findById(loginId);
         if (user == null) throw new UsernameNotFoundException("사용자 없음");
 
+        // 🚩 [추가] 정지된 회원인 경우 날짜를 계산해서 시큐리티에 에러로 던짐
+        if ("SUSPENDED".equals(user.getStatus())) {
+            String dateStr = "영구"; // 날짜가 비어있으면 영구 정지로 간주
+            if (user.getSuspensionEndDate() != null) {
+                // 날짜를 보기 편한 형식으로 포맷팅 (예: 2026년 03월 15일 15시 30분)
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분");
+                dateStr = user.getSuspensionEndDate().format(formatter);
+            }
+            // 여기서 발생시킨 에러 메시지가 LoginFailureHandler로 그대로 전달됩니다!
+            throw new org.springframework.security.authentication.LockedException("운영원칙 위반으로 [" + dateStr + "]까지 이용이 정지되었습니다.");
+        }
+
         // 1. 권한 처리
         String roleName = user.getRole().replace("ROLE_", "");
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_" + roleName);
 
         // 2. CustomUserDetails 가방에 ID와 실명을 각각 제자리에 담아줌
         return new CustomUserDetails(
-                user.getId(),       // 가방의 ID 칸에는 실제 ID(admin)를 넣음
+                user.getId(),
                 user.getPassword(),
                 authorities,
-                user.getName()      // 가방의 Name 칸에는 실명(관리자)을 넣음
+                user.getName(),
+                user.getStatus()
         );
     }
 

@@ -7,17 +7,28 @@ import java.util.Collection;
 
 public class CustomUserDetails extends User {
 
-    private final String name; // DB의 실명을 담을 공간
+    private final String name;   // DB의 실명
+    private final String status; // 🚩 DB의 상태(ACTIVE, SUSPENDED 등)를 담을 공간 추가!
 
     public CustomUserDetails(String username, String password,
                              Collection<? extends GrantedAuthority> authorities,
-                             String name) {
-        super(username, password, authorities); // ID, PW, 권한은 부모(User)에게 전달
-        this.name = name; // 이름은 내 공간에 저장
+                             String name, String status) { // 🚩 파라미터에 status 추가
+        super(username, password, authorities);
+        this.name = name;
+        this.status = status; // 🚩 내 공간에 상태 저장
     }
 
-    // 타임리프 등에서 호출하기 위한 게터(Getter)
     public String getName() {
         return name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // 🚩 이제 내가 가지고 있는 status 변수를 비교하면 됩니다!
+        return !"SUSPENDED".equals(this.status);
     }
 }
