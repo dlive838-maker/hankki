@@ -8,3 +8,5 @@ PickMeal 프로젝트
 - 확률형 게임 콘텐츠 및 알고리즘 설계 (알고리즘, 스케줄링)
 - 클라우드 기반 미디어 관리 및 시스템 자동화 (AWS S3, Scheduling)
 - 실시간 주변 맛집 시각화 및 공유 기능(Kakao Map API) 
+
+[pickmeal.pdf](https://github.com/user-attachments/files/26533910/pickmeal.pdf)
