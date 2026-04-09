@@ -74,7 +74,7 @@
 <div markdown="1">
   
 > _소셜 로그인 프로세스 및 직관적인 메인 페이지 시연 영상입니다._  
-> `<img src="[여기에_메인화면_시연영상_또는_이미지_링크를_넣어주세요](https://youtu.be/hvra-ooJCik?si=y-RZdBkwaMN_Lq0j)" width="800">`
+> <img src="[https://youtu.be/hvra-ooJCik?si=y-RZdBkwaMN_Lq0j]" width="800">
 
 </div>
 </details>
