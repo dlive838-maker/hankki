@@ -28,9 +28,9 @@
 | 포지션 | 이름 | 담당 업무 | Github |
 |:---:|:---:|---|:---:|
 | **팀장** | **강한수** | 프로젝트 총괄, 브랜치 병합 관리, 아키텍처 설계, 백엔드 개발 | [@dlive838-maker](https://github.com/dlive838-maker) |
-| **팀원** | **김승경** | AWS S3 이미지 인프라 구축, 카카오맵 API 연동 및 데이터 시각화 | - |
+| **팀원** | **김승경** | AWS S3 이미지 인프라 구축, 카카오맵 API 연동 및 데이터 시각화 | [@juno1007](https://github.com/juno1007) |
 | **팀원** | **김재민** | 프론트엔드 UI/UX 디자인, HTML/CSS/JS 위주 뷰페이지 구현 | - |
-| **팀원** | **황준호** | 월드컵 알고리즘 설계, OAuth2 연동, DB 및 카카오맵 API 구축 | - |
+| **팀원** | **황준호** | 월드컵 알고리즘 설계, OAuth2 연동, DB 및 카카오맵 API 구축 | [@juno1007](https://github.com/juno1007) |
 
 ---
 
@@ -67,58 +67,24 @@
 
 ---
 
-### 📸 프로젝트 시연 (Demo)
+### 📸 프로젝트 시연 (Demo Video)
 
-<details>
-<summary><b>1. 메인 화면 및 로그인 (클릭하여 펼치기)</b></summary>
-<div markdown="1">
-  
-> _소셜 로그인 프로세스 및 직관적인 메인 페이지 시연 영상입니다._  
-> <img src="[https://youtu.be/hvra-ooJCik?si=y-RZdBkwaMN_Lq0j]" width="800">
+각 이미지를 클릭하면 해당 기능의 유튜브 시연 영상으로 이동합니다.
 
-</div>
-</details>
+| 01. 메인 & 소셜 로그인 | 02. 게임 기반 메뉴 추천 |
+| :---: | :---: |
+| [![시연 영상 1](https://img.youtube.com/vi/hvra-ooJCik/mqdefault.jpg)](https://youtu.be/hvra-ooJCik) | [![시연 영상 2](https://img.youtube.com/vi/sqcy-zeS3RM/mqdefault.jpg)](https://youtu.be/sqcy-zeS3RM) |
+| 소셜 로그인 프로세스 및 <br>직관적인 메인 페이지 | 월드컵, 스무고개, 룰렛을 통한 <br>즐거운 메뉴 결정 과정 |
 
-<details>
-<summary><b>2. 게임 기반 추천 (월드컵, 스무고개, 룰렛)</b></summary>
-<div markdown="1">
-  
-> _게임 플레이를 통해 결과를 도출하는 과정입니다._  
-> `<img src="[여기에_게임기능_시연영상_또는_이미지_링크를_넣어주세요](https://youtu.be/sqcy-zeS3RM?si=DlM6wtB61DEam-JW)" width="800">`
+| 03. 주변 맛집 지도 탐색 | 04. 커뮤니티 및 리뷰 |
+| :---: | :---: |
+| [![시연 영상 3](https://img.youtube.com/vi/drSzSyq9T1Q/mqdefault.jpg)](https://youtu.be/drSzSyq9T1Q) | [![시연 영상 4](https://img.youtube.com/vi/Q4Oldm4fKNk/mqdefault.jpg)](https://youtu.be/Q4Oldm4fKNk) |
+| 추천 메뉴 기반 카카오맵 <br>주변 식당 위치 확인 | S3 이미지 업로드 기반 게시판 및 <br>생생한 맛집 리뷰 작성 |
 
-</div>
-</details>
-
-<details>
-<summary><b>3. 주변 맛집 지도 탐색</b></summary>
-<div markdown="1">
-
-> _추천 메뉴를 바탕으로 주변 식당 위치를 카카오맵에서 확인하는 기능입니다._  
-> `<img src="[여기에_지도탐색_시연영상_또는_이미지_링크를_넣어주세](https://youtu.be/drSzSyq9T1Q?si=iuGx4W0hIdZ3XcDb)요" width="800">`
-
-</div>
-</details>
-
-<details>
-<summary><b>4. 커뮤니티 게시판 및 리뷰 작성</b></summary>
-<div markdown="1">
-
-> _자유로운 글 작성, S3 이미지 업로드 및 리뷰 작성 화면입니다._  
-> `<img src="[여기에_커뮤니티_시연영상_또는_이미지_링크를_넣어주세요](https://youtu.be/Q4Oldm4fKNk?si=CDOBbXF3jGnVqF5V)" width="800">`
-
-</div>
-</details>
-
-<details>
-<summary><b>5. 관리자 기능</b></summary>
-<div markdown="1">
-
-> _관리자 로그인 후 글 삭제 및 회원 정지하는 기능입니다._  
-> `<img src="[여기에_커뮤니티_시연영상_또는_이미지_링크를_넣어주세요](https://youtu.be/t91Yp27cJhA?si=CCAG0hG2X-KVXgTF)" width="800">`
-
-</div>
-</details>
-
+| 05. 관리자 제어 기능 |
+| :---: |
+| [![시연 영상 5](https://img.youtube.com/vi/t91Yp27cJhA/mqdefault.jpg)](https://youtu.be/t91Yp27cJhA) |
+| 관리자 권한을 통한 <br>부적절한 게시글 삭제 및 회원 정지 |
 ---
 
 ### 🛠 트러블 슈팅 (Trouble Shooting)
