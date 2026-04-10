@@ -3,6 +3,17 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+application-secret.properties
+
+### Deployment ###
+app.zip
+deploy/
+.elasticbeanstalk/
+
+### Environment ###
+.env
+*.pem
+
 
 ### STS ###
 .apt_generated
@@ -31,4 +42,3 @@ build/
 
 ### VS Code ###
 .vscode/
-../class/
