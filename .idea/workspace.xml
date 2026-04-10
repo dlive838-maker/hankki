@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1e8719c0-9992-4814-868d-92e2b0a41396" name="변경" comment="26.03.05 1738 재민 코드 병합">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +78,7 @@
         <entry key="SpringBootApplicationConfigurationType">
           <value>
             <map>
-              <entry key="PickMealApplication" value="STOPPED" />
+              <entry key="PickMealApplication" value="FAILED" />
             </map>
           </value>
         </entry>
@@ -122,7 +122,7 @@
       <updated>1772763751055</updated>
       <workItem from="1775783620976" duration="1916000" />
       <workItem from="1775788117679" duration="361000" />
-      <workItem from="1775792877926" duration="3089000" />
+      <workItem from="1775792877926" duration="5724000" />
     </task>
     <servers />
   </component>
