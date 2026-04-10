@@ -1,1 +1,1 @@
-web: java -jar PickMeal-0.0.1-SNAPSHOT.jar
+web: java -jar application.jar
