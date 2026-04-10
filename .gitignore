@@ -3,7 +3,12 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+# Sensitive information
 application-secret.properties
+application-prod.properties
+*.jar
+.env
 
 ### Deployment ###
 app.zip
@@ -11,9 +16,7 @@ deploy/
 .elasticbeanstalk/
 
 ### Environment ###
-.env
 *.pem
-
 
 ### STS ###
 .apt_generated
@@ -28,7 +31,7 @@ deploy/
 .idea
 *.iws
 *.iml
-*.ipr
+.ipr
 
 ### NetBeans ###
 /nbproject/private/
